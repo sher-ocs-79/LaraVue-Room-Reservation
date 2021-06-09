@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="text-center">Bookings</h4><br/>
+        <h4 class="text-center">My Bookings</h4><br/>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -23,16 +23,14 @@
                 <td>{{ booking.created_at }}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <router-link :to="{name: 'edit-slot', params: { id: booking.id }}" class="btn btn-primary">Edit
+                        <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit
                         </router-link>
-                        <button class="btn btn-danger" @click="deleteSlot(booking.id)">Delete</button>
+                        <button class="btn btn-danger" @click="deleteBooking(booking.id)">Delete</button>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
-
-        <button type="button" class="btn btn-info" @click="this.$router.push('/booking/add')">Book a Room</button>
     </div>
 </template>
 
@@ -56,10 +54,10 @@ export default {
     });
   },
   methods: {
-    deleteSlot(id) {
+    deleteBooking(id) {
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
         this.$axios
-          .delete(`/api/bookings/delete/${id}`)
+          .delete(`/api/booking/delete/${id}`)
           .then(response => {
             let i = this.bookings.map(item => item.id).indexOf(id); // find index of your object
             this.bookings.splice(i, 1);

@@ -1,18 +1,14 @@
 <template>
     <div>
-        <h4 class="text-center">Edit Book</h4>
+        <h4 class="text-center">Edit Booking</h4>
         <div class="row">
             <div class="col-md-6">
-                <form @submit.prevent="updateBook">
+                <form @submit.prevent="updateBooking">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" v-model="book.name">
-                    </div>
-                    <div class="form-group">
-                        <label>Author</label>
-                        <input type="text" class="form-control" v-model="book.author">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Book</button>
+                        <label>Room Name</label>
+                        <input type="text" class="form-control" v-model="booking.name">
+                    </div>                    
+                    <button type="submit" class="btn btn-primary">Update Booking</button>
                 </form>
             </div>
         </div>
@@ -23,13 +19,13 @@
 export default {
   data() {
     return {
-      book: {}
+      booking: {}
     };
   },
   created() {
     this.$axios.get("/sanctum/csrf-cookie").then(response => {
       this.$axios
-        .get(`/api/books/edit/${this.$route.params.id}`)
+        .get(`/api/booking/edit/${this.$route.params.id}`)
         .then(response => {
           this.book = response.data;
         })
@@ -39,12 +35,12 @@ export default {
     });
   },
   methods: {
-    updateBook() {
+    updateBooking() {
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
         this.$axios
-          .post(`/api/books/update/${this.$route.params.id}`, this.book)
+          .post(`/api/booking/update/${this.$route.params.id}`, this.book)
           .then(response => {
-            this.$router.push({ name: "books" });
+            this.$router.push({ name: "bookings" });
           })
           .catch(function(error) {
             console.error(error);

@@ -6,7 +6,6 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 
 import Bookings from "../components/Bookings";
-import AddBooking from "../components/AddBooking";
 import EditBooking from "../components/EditBooking";
 
 export const routes = [
@@ -36,12 +35,7 @@ export const routes = [
         component: Bookings
     },
     {
-        name: "addbooking",
-        path: "/booking/add",
-        component: AddBooking
-    },
-    {
-        name: "editbooking",
+        name: "edit-booking",
         path: "/booking/edit/:id",
         component: EditBooking
     }
