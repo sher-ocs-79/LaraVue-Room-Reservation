@@ -14,13 +14,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="bookings in slot" :key="booking.id">
+            <tr v-for="booking in bookings" :key="booking.id">
                 <td>{{ booking.id }}</td>
-                <td>{{ booking.name }}</td>
-                <td>{{ booking.user.fullname }}</td>
-                <td>{{ booking.booking_date }}</td>
-                <td>{{ booking.booking_time }}</td>
-                <td>{{ booking.created_at }}</td>
+                <td>{{ booking.room.name }}</td>
+                <td>{{ booking.user.name }}</td>
+                <td>{{ formatDate(booking.from, "dddd, MMMM Do YYYY") }}</td>
+                <td>{{ formatDate(booking.from, "h:mm:ss a") }} - {{ formatDate(booking.to, "h:mm:ss a") }}</td>
+                <td>{{ formatDate(booking.created_at, "dddd, MMMM Do YYYY") }}</td>
                 <td>
                     <div class="btn-group" role="group">
                         <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit
@@ -35,18 +35,19 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
-      books: []
+      bookings: []
     };
   },
   created() {
     this.$axios.get("/sanctum/csrf-cookie").then(response => {
       this.$axios
-        .get("/api/bookings")
+        .get("/api/booking/list")
         .then(response => {
-          this.books = response.data;
+          this.bookings = response.data;
         })
         .catch(function(error) {
           console.error(error);
@@ -54,6 +55,9 @@ export default {
     });
   },
   methods: {
+    formatDate(value, format) {
+      return moment(value).format(format);
+    },
     deleteBooking(id) {
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
         this.$axios
