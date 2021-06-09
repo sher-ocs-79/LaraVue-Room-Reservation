@@ -1,18 +1,18 @@
 <template>
     <div>
-        <h4 class="text-center">Add Book</h4>
+        <h4 class="text-center">Book a Room</h4>
         <div class="row">
             <div class="col-md-6">
                 <form @submit.prevent="addBook">
                     <div class="form-group">
-                        <label>Name</label>
+                        <label>Room Name</label>
                         <input type="text" class="form-control" v-model="book.name">
                     </div>
                     <div class="form-group">
                         <label>Author</label>
                         <input type="text" class="form-control" v-model="book.author">
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Book</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>

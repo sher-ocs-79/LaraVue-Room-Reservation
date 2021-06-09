@@ -6,8 +6,8 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 
 import Bookings from "../components/Bookings";
-import AddSlot from "../components/AddSlot";
-import EditSlot from "../components/EditSlot";
+import AddBooking from "../components/AddBooking";
+import EditBooking from "../components/EditBooking";
 
 export const routes = [
     {
@@ -31,19 +31,19 @@ export const routes = [
         component: Dashboard
     },
     {
-        name: "books",
-        path: "/books",
+        name: "bookings",
+        path: "/bookings",
         component: Bookings
     },
     {
-        name: "addbook",
-        path: "/books/add",
-        component: AddSlot
+        name: "addbooking",
+        path: "/booking/add",
+        component: AddBooking
     },
     {
-        name: "editbook",
-        path: "/books/edit/:id",
-        component: EditSlot
+        name: "editbooking",
+        path: "/booking/edit/:id",
+        component: EditBooking
     }
 ];
 

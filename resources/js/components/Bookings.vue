@@ -1,36 +1,38 @@
 <template>
     <div>
-        <h4 class="text-center">All Books</h4><br/>
+        <h4 class="text-center">Bookings</h4><br/>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Author</th>
-                <th>Created At</th>
-                <th>Updated At</th>
+                <th>Room Name</th>
+                <th>Fullname</th>
+                <th>Booking Date</th>
+                <th>Booking Time</th>
+                <th>Date Created</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="book in books" :key="book.id">
-                <td>{{ book.id }}</td>
-                <td>{{ book.name }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.created_at }}</td>
-                <td>{{ book.updated_at }}</td>
+            <tr v-for="bookings in slot" :key="booking.id">
+                <td>{{ booking.id }}</td>
+                <td>{{ booking.name }}</td>
+                <td>{{ booking.user.fullname }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.booking_time }}</td>
+                <td>{{ booking.created_at }}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <router-link :to="{name: 'editbook', params: { id: book.id }}" class="btn btn-primary">Edit
+                        <router-link :to="{name: 'edit-slot', params: { id: booking.id }}" class="btn btn-primary">Edit
                         </router-link>
-                        <button class="btn btn-danger" @click="deleteBook(book.id)">Delete</button>
+                        <button class="btn btn-danger" @click="deleteSlot(booking.id)">Delete</button>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" @click="this.$router.push('/books/add')">Add Book</button>
+        <button type="button" class="btn btn-info" @click="this.$router.push('/booking/add')">Book a Room</button>
     </div>
 </template>
 
@@ -44,7 +46,7 @@ export default {
   created() {
     this.$axios.get("/sanctum/csrf-cookie").then(response => {
       this.$axios
-        .get("/api/books")
+        .get("/api/bookings")
         .then(response => {
           this.books = response.data;
         })
@@ -54,13 +56,13 @@ export default {
     });
   },
   methods: {
-    deleteBook(id) {
+    deleteSlot(id) {
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
         this.$axios
-          .delete(`/api/books/delete/${id}`)
+          .delete(`/api/bookings/delete/${id}`)
           .then(response => {
-            let i = this.books.map(item => item.id).indexOf(id); // find index of your object
-            this.books.splice(i, 1);
+            let i = this.bookings.map(item => item.id).indexOf(id); // find index of your object
+            this.bookings.splice(i, 1);
           })
           .catch(function(error) {
             console.error(error);

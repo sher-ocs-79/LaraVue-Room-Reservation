@@ -7,8 +7,7 @@
             <div class="collapse navbar-collapse">
                 <!-- for logged-in user-->
                 <div class="navbar-nav" v-if="isLoggedIn">
-                    <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>
-                    <router-link to="/rooms" class="nav-item nav-link">Rooms</router-link>
+                    <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>                    
                     <router-link to="/bookings" class="nav-item nav-link">Bookings</router-link>
                     <a class="nav-item nav-link" style="cursor: pointer;" @click="logout">Logout</a>
                 </div>
