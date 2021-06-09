@@ -16,11 +16,8 @@ class BookingController extends Controller
 
 	public function add(Request $request)
 	{
-		$book = new Booking([
-			'name' => $request->name
-		]);
+		$book = new Booking($request->all() + ['status' => Booking::STATUS_BOOKED]);
 		$book->save();
-
 		return response()->json('Booking successfully added');
 	}
 
@@ -34,7 +31,6 @@ class BookingController extends Controller
 	{
 		$book = Booking::find($id);
 		$book->update($request->all());
-
 		return response()->json('Booking successfully updated');
 	}
 
@@ -42,7 +38,6 @@ class BookingController extends Controller
 	{
 		$book = Booking::find($id);
 		$book->delete();
-
 		return response()->json('Booking successfully deleted');
 	}
 }

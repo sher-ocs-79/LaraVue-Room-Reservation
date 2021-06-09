@@ -20,7 +20,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::group(['prefix' => 'booking', 'middleware' => 'auth:sanctum'], function () {
-	Route::get('/', [BookingController::class, 'index']);
+	Route::get('/list', [BookingController::class, 'index']);
 	Route::post('add', [BookingController::class, 'add']);
 	Route::get('edit/{id}', [BookingController::class, 'edit']);
 	Route::post('update/{id}', [BookingController::class, 'update']);
