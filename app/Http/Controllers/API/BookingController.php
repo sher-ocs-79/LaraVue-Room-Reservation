@@ -15,14 +15,14 @@ class BookingController extends Controller
 
 	public function index()
 	{
-		$bookings = Booking::all()->toArray();
-		return array_reverse($bookings);
+		$bookings = Booking::orderBy('id', 'DESC')->paginate();
+		return response()->json($bookings);
 	}
 
 	public function all()
 	{
-		$bookings = Booking::where(['user_id' => Auth::id()])->get()->toArray();
-		return array_reverse($bookings);
+		$bookings = Booking::where(['user_id' => Auth::id()])->orderBy('id', 'DESC')->paginate(Booking::LIMIT);
+		return response()->json($bookings);
 	}
 
 	public function get($id)

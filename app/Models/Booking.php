@@ -10,6 +10,7 @@ class Booking extends Model
     use HasFactory;
 
     const STATUS_BOOKED = 1;
+    const LIMIT = 2;
 
 	protected $fillable = ['room_id','user_id','from','to','status'];
 

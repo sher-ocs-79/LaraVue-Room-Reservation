@@ -30,13 +30,27 @@
             </tr>
             </tbody>
         </table>
+        <div id="pagination" class="float-right">
+          <v-pagination
+            v-model="pagination.page"
+            :pages="pagecount"
+            :range-size="1"
+            active-color="#DCEDFF"
+            @update:modelValue="getBookings"
+          />
+        </div>
         <button type="button" class="btn btn-info" @click="navigateTo('/booking/add')" v-if="isLoggedin">Create New</button>
     </div>
 </template>
 
 <script>
+import VPagination from "@hennge/vue3-pagination";
+import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 import moment from "moment";
 export default {
+  components: {
+    VPagination
+  },
   data() {
     return {
       title: "Reservations",
@@ -45,6 +59,9 @@ export default {
       sort: {
         key: "",
         isAsc: false
+      },
+      pagination: {
+        page: 1
       }
     };
   },
@@ -53,23 +70,14 @@ export default {
       this.title = "My Reservations";
       this.url = "/api/booking/all";
     }
-    this.$axios.get("/sanctum/csrf-cookie").then(response => {
-      this.$axios
-        .get(this.url)
-        .then(response => {
-          this.bookings = response.data;
-        })
-        .catch(function(error) {
-          console.error(error);
-        });
-    });
+    this.getBookings();
   },
   computed: {
     isLoggedin() {
       return window.Laravel.isLoggedin;
     },
     sortedItems() {
-      const list = this.bookings.slice();
+      const list = this.bookings.data;
       if (!!this.sort.key) {
         list.sort((a, b) => {
           a = a[this.sort.key];
@@ -78,6 +86,9 @@ export default {
         });
       }
       return list;
+    },
+    pagecount() {
+      return Math.ceil(this.bookings.total / this.bookings.per_page);
     }
   },
   methods: {
@@ -87,13 +98,26 @@ export default {
     formatDate(value, format) {
       return moment(value).format(format);
     },
+    getBookings(index) {
+      this.$axios.get("/sanctum/csrf-cookie").then(response => {
+        let page = index || 1;
+        this.$axios
+          .get(this.url + `?page=${page}`)
+          .then(response => {
+            this.bookings = response.data;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+      });
+    },
     deleteBooking(id) {
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
         this.$axios
           .delete(`/api/booking/delete/${id}`)
           .then(response => {
-            let i = this.bookings.map(item => item.id).indexOf(id); // find index of your object
-            this.bookings.splice(i, 1);
+            let i = this.bookings.data.map(item => item.id).indexOf(id); // find index of your object
+            this.bookings.data.splice(i, 1);
           })
           .catch(function(error) {
             console.error(error);
@@ -108,6 +132,9 @@ export default {
     sortBy(key) {
       this.sort.isAsc = this.sort.key === key ? !this.sort.isAsc : false;
       this.sort.key = key;
+    },
+    paginate(page) {
+      this.getBookings(page);
     }
   }
   // beforeRouteEnter(to, from, next) {
@@ -127,5 +154,11 @@ table th.sorted.asc::after {
 table th.sorted.desc::after {
   display: inline-block;
   content: "▲";
+}
+#pagination {
+  margin-right: 13px;
+}
+.pagination {
+  margin: 0px !important;
 }
 </style>
