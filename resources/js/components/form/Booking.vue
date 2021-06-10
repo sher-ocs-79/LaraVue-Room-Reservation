@@ -35,7 +35,7 @@
 
 <script>
 import moment from "moment";
-const DATE_FORMAT = "YYYY-MM-DD HH:mm";
+const DATE_FORMAT = "YYYY-MM-DD HH:mm:00";
 let durations = { 30: "30-minutes", 60: "1-hours" };
 export default {
   props: ["id"],
