@@ -11,7 +11,7 @@
                 <div class="col-sm">
                     <label>Select a Date</label>    
                     <div class="clearfix"></div>                        
-                    <v-date-picker v-model="date" mode="dateTime" :minute-increment="30"/>
+                    <v-date-picker v-model="date" mode="dateTime" :minute-increment="30" :from-page="{month:calendarAttrs.month, year:calendarAttrs.year}"/>
                 </div>
                 <div class="col-sm">                                
                     <label>Select a Duration</label>   
@@ -49,7 +49,8 @@ export default {
         room_id: 1,
         from: "",
         to: ""
-      }
+      },
+      calendarAttrs: {}
     };
   },
   mounted() {
@@ -82,6 +83,10 @@ export default {
           .then(response => {
             this.booking = response.data;
             this.date = this.booking.from;
+            this.calendarAttrs.month = parseInt(moment(this.date).format("M"));
+            this.calendarAttrs.year = parseInt(
+              moment(this.date).format("YYYY")
+            );
             let diff = Math.abs(
               moment(this.booking.from).diff(this.booking.to, "minutes")
             );
