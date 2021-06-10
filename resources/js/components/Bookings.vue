@@ -1,12 +1,15 @@
 <template>
     <div>
-        <h4 class="text-center">{{ title }}</h4><br/>
+        <h4 class="text-center">{{ title }}</h4><br/>        
+        <div class="search-wrapper float-right">
+          <input type="text" v-model="search" placeholder="Search here ..."/>
+        </div>  
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th :class="sortedClass('id')" @click="sortBy('id')">ID</th>
                 <th :class="sortedClass('id')" @click="sortBy('id')">Room Name</th>
-                <th :class="sortedClass('id')" @click="sortBy('id')">Fullname</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')" v-if="!isLoggedin">Fullname</th>
                 <th :class="sortedClass('id')" @click="sortBy('id')">Booking Date</th>
                 <th :class="sortedClass('id')" @click="sortBy('id')">Booking Time</th>
                 <th :class="sortedClass('id')" @click="sortBy('id')">Date Created</th>
@@ -14,17 +17,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="booking in sortedItems" :key="booking.id">
-                <td>{{ booking.id }}</td>
-                <td>{{ booking.room.name }}</td>
-                <td>{{ booking.user.name }}</td>
-                <td>{{ formatDate(booking.from, "dddd, DD-MMMM-YYYY") }}</td>
-                <td>{{ formatDate(booking.from, "h:mm:ss a") }} - {{ formatDate(booking.to, "h:mm:ss a") }}</td>
-                <td>{{ formatDate(booking.created_at, "dddd, DD-MMMM-YYYY") }}</td>
+            <tr v-for="item in filteredItems" :key="item.id">
+                <td>{{ item.id }}</td>
+                <td>{{ item.room.name }}</td>
+                <td v-if="!isLoggedin">{{ item.user.name }}</td>
+                <td>{{ formatDate(item.from, "dddd, DD-MMMM-YYYY") }}</td>
+                <td>{{ formatDate(item.from, "h:mm:ss a") }} - {{ formatDate(item.to, "h:mm:ss a") }}</td>
+                <td>{{ formatDate(item.created_at, "dddd, DD-MMMM-YYYY") }}</td>
                 <td v-if="isLoggedin">
                     <div class="btn-group" role="group">
-                        <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit</router-link>
-                        <button class="btn btn-danger" @click="deleteBooking(booking.id)">Delete</button>
+                        <router-link :to="{name: 'edit-booking', params: { id: item.id }}" class="btn btn-primary">Edit</router-link>
+                        <button class="btn btn-danger" @click="deleteBooking(item.id)">Delete</button>
                     </div>
                 </td>
             </tr>
@@ -62,7 +65,8 @@ export default {
       },
       pagination: {
         page: 1
-      }
+      },
+      search: ""
     };
   },
   created() {
@@ -76,8 +80,24 @@ export default {
     isLoggedin() {
       return window.Laravel.isLoggedin;
     },
+    filteredItems() {
+      let list = this.bookings.data;
+      if (this.sortedItems) {
+        list = this.sortedItems.filter(item => {
+          let keys = [item.room.name];
+          if (!this.isLoggedin) {
+            keys.push(item.user.name);
+          }
+          return keys
+            .join(" ")
+            .toLowerCase()
+            .includes(this.search.toLowerCase());
+        });
+      }
+      return list;
+    },
     sortedItems() {
-      const list = this.bookings.data;
+      let list = this.bookings.data;
       if (!!this.sort.key) {
         list.sort((a, b) => {
           a = a[this.sort.key];
@@ -160,5 +180,9 @@ table th.sorted.desc::after {
 }
 .pagination {
   margin: 0px !important;
+}
+.search-wrapper {
+  margin-bottom: 5px;
+  border: 1px solid #dee2e6;
 }
 </style>
