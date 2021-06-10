@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="text-center">Update Reservation</h4>
+        <h4 class="text-center">New Reservation</h4>
         <div class="row">
             <div class="col-md-6">
                 <booking-form/>

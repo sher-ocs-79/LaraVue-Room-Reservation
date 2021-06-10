@@ -18,9 +18,9 @@
                 <td>{{ booking.id }}</td>
                 <td>{{ booking.room.name }}</td>
                 <td>{{ booking.user.name }}</td>
-                <td>{{ formatDate(booking.from, "dddd, MMMM Do YYYY") }}</td>
+                <td>{{ formatDate(booking.from, "dddd, DD-MMMM-YYYY") }}</td>
                 <td>{{ formatDate(booking.from, "h:mm:ss a") }} - {{ formatDate(booking.to, "h:mm:ss a") }}</td>
-                <td>{{ formatDate(booking.created_at, "dddd, MMMM Do YYYY") }}</td>
+                <td>{{ formatDate(booking.created_at, "dddd, DD-MMMM-YYYY") }}</td>
                 <td>
                     <div class="btn-group" role="group">
                         <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit
@@ -31,6 +31,7 @@
             </tr>
             </tbody>
         </table>
+        <button type="button" class="btn btn-info" @click="this.$router.push('/booking/add')">Create New</button>
     </div>
 </template>
 

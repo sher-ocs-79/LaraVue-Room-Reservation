@@ -1,14 +1,14 @@
 <template>
     <div class="container">
         <div class="text-center" style="margin: 20px 0px 20px 0px;">            
-            <span class="text-secondary">Laravel and Vue Booking Application</span>
+            <span class="text-secondary">Simple Room Reservation Application</span>
         </div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="collapse navbar-collapse">
                 <!-- for logged-in user-->
                 <div class="navbar-nav" v-if="isLoggedIn">
                     <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>                    
-                    <router-link to="/bookings" class="nav-item nav-link">Bookings</router-link>
+                    <router-link to="/bookings" class="nav-item nav-link">Reservation</router-link>
                     <a class="nav-item nav-link" style="cursor: pointer;" @click="logout">Logout</a>
                 </div>
                 <!-- for non-logged user-->
