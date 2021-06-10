@@ -33,7 +33,7 @@ To create a new reservation, click the button Create New and select the desired 
 To view all the reservations, click Logout and goto the Reservations page.
 <img width="1139" alt="Screen Shot 2021-06-10 at 8 30 37 PM" src="https://user-images.githubusercontent.com/2645314/121525461-f606a580-ca2a-11eb-9588-e90166f3aa44.png">
 
-## Booking Consideration
+## Logic Considerations
 - A booking can be 30 minute or 1 hour long.
 - The first booking start time at 8:00 AM, the last one (start time) at 5:00 PM.
 - Booking start time and end time has to be on the same day.
