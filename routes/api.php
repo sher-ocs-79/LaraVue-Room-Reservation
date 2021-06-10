@@ -18,10 +18,11 @@ use App\Http\Controllers\API\RoomController;
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('bookings', [BookingController::class, 'index']);
 
 Route::get('rooms', [RoomController::class, 'index']);
 Route::group(['prefix' => 'booking', 'middleware' => 'auth:sanctum'], function () {
-	Route::get('/list', [BookingController::class, 'index']);
+	Route::get('/list', [BookingController::class, 'get']);
 	Route::post('add', [BookingController::class, 'add']);
 	Route::get('edit/{id}', [BookingController::class, 'edit']);
 	Route::post('update/{id}', [BookingController::class, 'update']);

@@ -16,6 +16,12 @@ class BookingController extends Controller
 		return array_reverse($books);
 	}
 
+	public function get()
+	{
+		$books = Booking::where(['user_id' => Auth::id()])->get()->toArray();
+		return array_reverse($books);
+	}
+
 	public function add(Request $request)
 	{
 		if ($this->_isAvailable($request)) {

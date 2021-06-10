@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="text-center">My Bookings</h4><br/>
+        <h4 class="text-center">{{ title }}</h4><br/>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -10,7 +10,7 @@
                 <th :class="sortedClass('id')" @click="sortBy('id')">Booking Date</th>
                 <th :class="sortedClass('id')" @click="sortBy('id')">Booking Time</th>
                 <th :class="sortedClass('id')" @click="sortBy('id')">Date Created</th>
-                <th>Actions</th>
+                <th v-if="isLoggedin">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -21,7 +21,7 @@
                 <td>{{ formatDate(booking.from, "dddd, DD-MMMM-YYYY") }}</td>
                 <td>{{ formatDate(booking.from, "h:mm:ss a") }} - {{ formatDate(booking.to, "h:mm:ss a") }}</td>
                 <td>{{ formatDate(booking.created_at, "dddd, DD-MMMM-YYYY") }}</td>
-                <td>
+                <td v-if="isLoggedin">
                     <div class="btn-group" role="group">
                         <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit
                         </router-link>
@@ -31,7 +31,7 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-info" @click="this.$router.push('/booking/add')">Create New</button>
+        <button type="button" class="btn btn-info" @click="navigateTo('/booking/add')" v-if="isLoggedin">Create New</button>
     </div>
 </template>
 
@@ -40,6 +40,8 @@ import moment from "moment";
 export default {
   data() {
     return {
+      title: "Reservations",
+      url: "/api/bookings",
       bookings: [],
       sort: {
         key: "",
@@ -48,9 +50,13 @@ export default {
     };
   },
   created() {
+    if (window.Laravel.isLoggedin) {
+      this.title = "My Reservations";
+      this.url = "/api/booking/list";
+    }
     this.$axios.get("/sanctum/csrf-cookie").then(response => {
       this.$axios
-        .get("/api/booking/list")
+        .get(this.url)
         .then(response => {
           this.bookings = response.data;
         })
@@ -60,6 +66,9 @@ export default {
     });
   },
   computed: {
+    isLoggedin() {
+      return window.Laravel.isLoggedin;
+    },
     sortedItems() {
       const list = this.bookings.slice();
       if (!!this.sort.key) {
@@ -73,6 +82,9 @@ export default {
     }
   },
   methods: {
+    navigateTo(page) {
+      this.$router.push(page);
+    },
     formatDate(value, format) {
       return moment(value).format(format);
     },
@@ -98,13 +110,13 @@ export default {
       this.sort.isAsc = this.sort.key === key ? !this.sort.isAsc : false;
       this.sort.key = key;
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    if (!window.Laravel.isLoggedin) {
-      window.location.href = "/";
-    }
-    next();
   }
+  // beforeRouteEnter(to, from, next) {
+  //   if (!window.Laravel.isLoggedin) {
+  //     window.location.href = "/";
+  //   }
+  //   next();
+  // }
 };
 </script>
 

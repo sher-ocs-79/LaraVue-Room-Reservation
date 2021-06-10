@@ -8,12 +8,13 @@
                 <!-- for logged-in user-->
                 <div class="navbar-nav" v-if="isLoggedIn">
                     <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>                    
-                    <router-link to="/bookings" class="nav-item nav-link">Reservation</router-link>
+                    <router-link to="/bookings" class="nav-item nav-link">My Reservations</router-link>
                     <a class="nav-item nav-link" style="cursor: pointer;" @click="logout">Logout</a>
                 </div>
                 <!-- for non-logged user-->
                 <div class="navbar-nav" v-else>
                     <router-link to="/" class="nav-item nav-link">Home</router-link>
+                    <router-link to="/bookings" class="nav-item nav-link">Reservations</router-link>
                     <router-link to="/login" class="nav-item nav-link">login</router-link>
                     <router-link to="/register" class="nav-item nav-link">Register</router-link>                    
                 </div>
