@@ -22,8 +22,9 @@ Route::get('bookings', [BookingController::class, 'index']);
 
 Route::get('rooms', [RoomController::class, 'index']);
 Route::group(['prefix' => 'booking', 'middleware' => 'auth:sanctum'], function () {
-	Route::get('/list', [BookingController::class, 'get']);
+	Route::get('/all', [BookingController::class, 'all']);
 	Route::post('add', [BookingController::class, 'add']);
+	Route::get('/get/{id}', [BookingController::class, 'get']);
 	Route::get('edit/{id}', [BookingController::class, 'edit']);
 	Route::post('update/{id}', [BookingController::class, 'update']);
 	Route::delete('delete/{id}', [BookingController::class, 'delete']);

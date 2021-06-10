@@ -11,17 +11,17 @@
                 <div class="col-sm">
                     <label>Select a Date</label>    
                     <div class="clearfix"></div>                        
-                    <v-date-picker v-model="date" mode="dateTime" :minute-increment="30" :attributes='attrs' is-required />
+                    <v-date-picker v-model="date" mode="dateTime" :minute-increment="30"/>
                 </div>
                 <div class="col-sm">                                
                     <label>Select a Duration</label>   
                     <div class="clearfix"></div>                                  
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" v-model="duration" value="30-minutes" id="duration-minute" checked>
+                        <input class="form-check-input" type="radio" v-model="duration" :value="getDuration(30)" id="duration-minute" checked>
                         <label class="form-check-label" for="duration-minute">30 Minutes</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" v-model="duration" value="1-hours" id="duration-hour">
+                        <input class="form-check-input" type="radio" v-model="duration" :value="getDuration(60)" id="duration-hour">
                         <label class="form-check-label" for="duration-hour">1 Hour</label>
                     </div>
                 </div>
@@ -36,9 +36,12 @@
 <script>
 import moment from "moment";
 const DATE_FORMAT = "YYYY-MM-DD HH:mm";
+let durations = { 30: "30-minutes", 60: "1-hours" };
 export default {
+  props: ["id"],
   data() {
     return {
+      action: "add",
       rooms: [],
       date: new Date(),
       duration: "30-minutes",
@@ -46,26 +49,43 @@ export default {
         room_id: 1,
         from: "",
         to: ""
-      },
-      attrs: [
-        {
-          key: "today",
-          highlight: true,
-          dates: new Date()
-        }
-      ]
+      }
     };
   },
   mounted() {
     this.getRooms();
+    if (this.id) {
+      this.getBooking(this.id);
+      this.action = "update/" + this.id;
+    }
   },
   methods: {
+    getDuration(duration) {
+      return durations[duration];
+    },
     getRooms() {
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
         this.$axios
           .get("/api/rooms")
           .then(response => {
             this.rooms = response.data;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+      });
+    },
+    getBooking(id) {
+      this.$axios.get("/sanctum/csrf-cookie").then(response => {
+        this.$axios
+          .get("/api/booking/get/" + id)
+          .then(response => {
+            this.booking = response.data;
+            this.date = this.booking.from;
+            let diff = Math.abs(
+              moment(this.booking.from).diff(this.booking.to, "minutes")
+            );
+            this.duration = durations[diff];
           })
           .catch(function(error) {
             console.error(error);
@@ -79,19 +99,22 @@ export default {
         .add(parseInt(duration[0]), duration[1])
         .format(DATE_FORMAT);
       this.$axios.get("/sanctum/csrf-cookie").then(response => {
-        this.$axios
-          .post("/api/booking/add", this.booking)
-          .then(response => {
-            if (!response.data.added) {
-              alert(response.data.message);
-            } else {
-              this.$router.push({ name: "bookings" });
-            }
-          })
-          .catch(function(error) {
-            console.error(error);
-          });
+        this.commit();
       });
+    },
+    commit() {
+      this.$axios
+        .post("/api/booking/" + this.action, this.booking)
+        .then(response => {
+          if (!response.data.success) {
+            alert(response.data.message);
+          } else {
+            this.$router.push({ name: "bookings" });
+          }
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
     }
   }
 };

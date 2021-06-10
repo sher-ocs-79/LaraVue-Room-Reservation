@@ -23,8 +23,7 @@
                 <td>{{ formatDate(booking.created_at, "dddd, DD-MMMM-YYYY") }}</td>
                 <td v-if="isLoggedin">
                     <div class="btn-group" role="group">
-                        <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit
-                        </router-link>
+                        <router-link :to="{name: 'edit-booking', params: { id: booking.id }}" class="btn btn-primary">Edit</router-link>
                         <button class="btn btn-danger" @click="deleteBooking(booking.id)">Delete</button>
                     </div>
                 </td>
@@ -52,7 +51,7 @@ export default {
   created() {
     if (window.Laravel.isLoggedin) {
       this.title = "My Reservations";
-      this.url = "/api/booking/list";
+      this.url = "/api/booking/all";
     }
     this.$axios.get("/sanctum/csrf-cookie").then(response => {
       this.$axios
