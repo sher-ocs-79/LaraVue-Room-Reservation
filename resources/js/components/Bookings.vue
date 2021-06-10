@@ -4,17 +4,17 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Room Name</th>
-                <th>Fullname</th>
-                <th>Booking Date</th>
-                <th>Booking Time</th>
-                <th>Date Created</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')">ID</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')">Room Name</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')">Fullname</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')">Booking Date</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')">Booking Time</th>
+                <th :class="sortedClass('id')" @click="sortBy('id')">Date Created</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="booking in bookings" :key="booking.id">
+            <tr v-for="booking in sortedItems" :key="booking.id">
                 <td>{{ booking.id }}</td>
                 <td>{{ booking.room.name }}</td>
                 <td>{{ booking.user.name }}</td>
@@ -40,7 +40,11 @@ import moment from "moment";
 export default {
   data() {
     return {
-      bookings: []
+      bookings: [],
+      sort: {
+        key: "",
+        isAsc: false
+      }
     };
   },
   created() {
@@ -54,6 +58,19 @@ export default {
           console.error(error);
         });
     });
+  },
+  computed: {
+    sortedItems() {
+      const list = this.bookings.slice();
+      if (!!this.sort.key) {
+        list.sort((a, b) => {
+          a = a[this.sort.key];
+          b = b[this.sort.key];
+          return (a === b ? 0 : a > b ? 1 : -1) * (this.sort.isAsc ? 1 : -1);
+        });
+      }
+      return list;
+    }
   },
   methods: {
     formatDate(value, format) {
@@ -71,6 +88,15 @@ export default {
             console.error(error);
           });
       });
+    },
+    sortedClass(key) {
+      return this.sort.key === key
+        ? `sorted ${this.sort.isAsc ? "asc" : "desc"}`
+        : "";
+    },
+    sortBy(key) {
+      this.sort.isAsc = this.sort.key === key ? !this.sort.isAsc : false;
+      this.sort.key = key;
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -81,3 +107,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+table th.sorted.asc::after {
+  display: inline-block;
+  content: "▼";
+}
+table th.sorted.desc::after {
+  display: inline-block;
+  content: "▲";
+}
+</style>
