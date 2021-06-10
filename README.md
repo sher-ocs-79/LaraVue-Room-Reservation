@@ -1,3 +1,9 @@
+## Recommended Requirements:
+* PHP Version: PHP 7.3.*
+* Mysql Version: 8.0.*
+* NPM Version: 7.*
+* Vue Version: 3.*
+
 ## How to setup and run?
 
 - Clone this repository (git clone https://github.com/sher-ocs-79/LaraVue-Room-Reservation.git)
@@ -8,44 +14,20 @@
 - Run the Vue application (npm run watch)
 - Run the Laravel application (php artisan serve)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## How to use this application?
 
-## Learning Laravel
+Click Register page from the menu and enter your Email & Password details.
+<img width="921" alt="Screen Shot 2021-06-10 at 8 20 28 PM" src="https://user-images.githubusercontent.com/2645314/121523931-598fd380-ca29-11eb-95a8-7a9c0a4b5f3d.png">
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Click the Login page from the menu.
+<img width="909" alt="Screen Shot 2021-06-10 at 8 19 20 PM" src="https://user-images.githubusercontent.com/2645314/121523795-2f3e1600-ca29-11eb-9e3d-f8841e1849e4.png">
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+From the dashboard, click My Reservation.
+<img width="1156" alt="Screen Shot 2021-06-10 at 8 22 16 PM" src="https://user-images.githubusercontent.com/2645314/121524142-93f97080-ca29-11eb-997a-809d9578ae4e.png">
 
-## Laravel Sponsors
+To create a new reservation, click the button Create New and select the desired Room, Date, Time & Duration.
+<img width="711" alt="Screen Shot 2021-06-10 at 8 25 01 PM" src="https://user-images.githubusercontent.com/2645314/121524510-f7839e00-ca29-11eb-91bc-700b12921c78.png">
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+To edit or delete a reservation just click the button from the Action column accordingly.
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
