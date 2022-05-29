@@ -5,5 +5,5 @@ namespace App\Contracts;
 
 interface RoomRepositoryInterfaceContract
 {
-
+    public function getAll(): iterable;
 }

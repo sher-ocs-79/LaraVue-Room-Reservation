@@ -1,15 +1,22 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Contracts\RoomRepositoryInterfaceContract;
 use App\Http\Controllers\Controller;
-use App\Models\Room;
 
 class RoomController extends Controller
 {
-	public function index()
+    protected $roomRepository;
+
+    public function __construct(RoomRepositoryInterfaceContract $roomRepository)
+    {
+        $this->roomRepository = $roomRepository;
+    }
+
+    public function index()
 	{
-		$rooms = Room::all()->toArray();
-		return array_reverse($rooms);
+        return response()->json($this->roomRepository->getAll());
 	}
 }
