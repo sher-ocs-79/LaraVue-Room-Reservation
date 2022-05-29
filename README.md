@@ -11,11 +11,11 @@
 - Clone this repository (git clone https://github.com/sher-ocs-79/LaraVue-Room-Reservation.git)
 - Edit ".env" file and change the DB configuration accordingly.
 - Edit `config/sanctum.php` add your localhost and port.
-- Migrate database (php artisan migrate)
-- Execute seeder (php artisan db:seed --class=Rooms)
-- Install Vue node modules (npm install)
-- Run the Vue application (npm run watch)
-- Run the Laravel application (php artisan serve)
+- Migrate database (`php artisan migrate`)
+- Execute seeder (`php artisan db:seed --class=Rooms`)
+- Install Vue node modules (`npm install`)
+- Run the Vue application (`npm run watch`)
+- Run the Laravel application (`php artisan serve`)
 
 ## How to use the application?
 
