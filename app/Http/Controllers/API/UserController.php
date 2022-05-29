@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Contracts\UserRepositoryInterfaceContract;
 use Session;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,26 +12,34 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-	/**
+    /**
+     * @var UserRepositoryInterfaceContract
+     */
+    protected $userRepository;
+
+    public function __construct(UserRepositoryInterfaceContract $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    /**
 	 * Register
 	 */
 	public function register(Request $request)
 	{
 		try {
-			$user = new User();
-			$user->name = $request->name;
-			$user->email = $request->email;
-			$user->password = Hash::make($request->password);
-			$user->save();
-
+            $this->userRepository->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 			$success = true;
 			$message = 'User register successfully';
-		} catch (\Illuminate\Database\QueryException $ex) {
+		} catch (\Illuminate\Database\QueryException $exception) {
 			$success = false;
-			$message = $ex->getMessage();
+			$message = $exception->getMessage();
 		}
 
-		// response
 		$response = [
 			'success' => $success,
 			'message' => $message,
@@ -40,18 +49,16 @@ class UserController extends Controller
 
 	public function login(Request $request)
 	{
-		$credentials = [
-			'email' => $request->email,
-			'password' => $request->password,
-		];
-		if (Auth::attempt($credentials)) {
-			$user = User::where('email', $request['email'])->firstOrFail();
-			$token = $user->createToken('auth_token')->plainTextToken;
-			$response = [
-				'success' => TRUE,
-				'access_token' => $token,
-				'token_type' => 'Bearer',
-			];
+        $user = $this->userRepository->getByEmail($request->email);
+
+        if (!empty($user) === true && Hash::check($request->password, $user->getAuthPassword()) === true) {
+            Auth::login($user);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $response = [
+                'success' => TRUE,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ];
 		} else {
 			$response = [
 				'success' => FALSE,
@@ -67,9 +74,9 @@ class UserController extends Controller
 			Session::flush();
 			$success = true;
 			$message = 'Successfully logged out';
-		} catch (\Illuminate\Database\QueryException $ex) {
+		} catch (\Illuminate\Database\QueryException $exception) {
 			$success = false;
-			$message = $ex->getMessage();
+			$message = $exception->getMessage();
 		}
 		$response = [
 			'success' => $success,
