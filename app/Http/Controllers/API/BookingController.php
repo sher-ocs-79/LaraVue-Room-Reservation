@@ -37,14 +37,14 @@ class BookingController extends Controller
 
 	public function get($id)
 	{
-        $booking = $this->bookingRepository->getById($id)->toArray();
+        $booking = $this->bookingRepository->getById((int)$id)->toArray();
 
         return $booking['user_id'] == Auth::id() ? array_reverse($booking) : null;
 	}
 
 	public function edit($id)
 	{
-		return response()->json($this->bookingRepository->getById($id));
+		return response()->json($this->bookingRepository->getById((int)$id));
 	}
 
 	public function add(Request $request)
@@ -67,7 +67,7 @@ class BookingController extends Controller
 			if (!$this->_isValid($request)) {
 				throw new Exception('Selected Time is not available.');
 			}
-            $booking = $this->bookingRepository->getById($id);
+            $booking = $this->bookingRepository->getById((int)$id);
 			$booking->from = $request->from;
 			$booking->to = $request->to;
 			if ($booking->isDirty() && $this->_isOccupied($request)) {  // When booking date has been changed
@@ -85,7 +85,7 @@ class BookingController extends Controller
 
 	public function delete($id)
 	{
-        $this->bookingRepository->getById($id)->delete();
+        $this->bookingRepository->getById((int)$id)->delete();
 		return response()->json('Booking successfully deleted');
 	}
 
@@ -96,9 +96,7 @@ class BookingController extends Controller
 
 	protected function _isOccupied(Request $request)
 	{
-		return count(Booking::whereBetween('from', [$request->from, $request->to])
-			->orWhereBetween('to', [$request->from, $request->to])
-			->get());
+		return count($this->bookingRepository->getByDateRange($request->from, $request->to));
 	}
 
 	protected function _isValid(Request $request)

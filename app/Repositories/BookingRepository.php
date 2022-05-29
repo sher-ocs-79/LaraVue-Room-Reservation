@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Contracts\BookingRepositoryInterfaceContract;
 use App\Models\Booking;
+use Illuminate\Database\Eloquent\Collection;
 
 class BookingRepository extends BaseRepository implements BookingRepositoryInterfaceContract
 {
@@ -33,5 +34,14 @@ class BookingRepository extends BaseRepository implements BookingRepositoryInter
     public function getById(int $booking_id): Booking
     {
         return $this->model->findOrFail($booking_id);
+    }
+
+    public function getByDateRange($from, $to): Collection
+    {
+        return $this
+            ->model
+            ->whereBetween('from', [$from, $to])
+            ->orWhereBetween('to', [$from, $to])
+            ->get();
     }
 }
