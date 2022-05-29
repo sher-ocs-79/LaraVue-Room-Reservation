@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Contracts\BookingRepositoryInterfaceContract;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,35 +15,45 @@ class BookingController extends Controller
 {
 	protected $valid_start_time = ['08', '17'];  // Starting time should be within 8:00am to 5:00pm
 
-	public function index()
+    /**
+     * @var BookingRepositoryInterfaceContract
+     */
+    protected $bookingRepository;
+
+    public function __construct(BookingRepositoryInterfaceContract $bookingRepository)
+    {
+        $this->bookingRepository = $bookingRepository;
+    }
+
+    public function index()
 	{
-		$bookings = Booking::orderBy('id', 'DESC')->paginate(Booking::LIMIT);
-		return response()->json($bookings);
+		return response()->json($this->bookingRepository->getAllWithPagination());
 	}
 
 	public function all()
 	{
-		$bookings = Booking::where(['user_id' => Auth::id()])->orderBy('id', 'DESC')->paginate(Booking::LIMIT);
-		return response()->json($bookings);
+		return response()->json($this->bookingRepository->getAllByUserWithPagination(Auth::id()));
 	}
 
 	public function get($id)
 	{
-		$booking = Booking::where(['id' => $id, 'user_id' => Auth::id()])->first()->toArray();
-		return array_reverse($booking);
+        $booking = $this->bookingRepository->getById((int)$id)->toArray();
+
+        return $booking['user_id'] == Auth::id() ? array_reverse($booking) : null;
 	}
 
 	public function edit($id)
 	{
-		$booking = Booking::find($id);
-		return response()->json($booking);
+		return response()->json($this->bookingRepository->getById((int)$id));
 	}
 
 	public function add(Request $request)
 	{
 		if ($this->_isAvailable($request)) {
-			$booking = new Booking($request->all() + ['user_id' => Auth::id(), 'status' => Booking::STATUS_BOOKED]);
-			$booking->save();
+            $this->bookingRepository->create([
+                'user_id' => Auth::id(),
+                'status' => Booking::STATUS_BOOKED,
+            ] + $request->all());
 			return response()->json(['success' => TRUE]);
 		} else {
 			return response()->json(['success' => FALSE, 'message' => 'Selected date/time is not available.']);
@@ -55,7 +67,7 @@ class BookingController extends Controller
 			if (!$this->_isValid($request)) {
 				throw new Exception('Selected Time is not available.');
 			}
-			$booking = Booking::find($id);
+            $booking = $this->bookingRepository->getById((int)$id);
 			$booking->from = $request->from;
 			$booking->to = $request->to;
 			if ($booking->isDirty() && $this->_isOccupied($request)) {  // When booking date has been changed
@@ -73,8 +85,7 @@ class BookingController extends Controller
 
 	public function delete($id)
 	{
-		$booking = Booking::find($id);
-		$booking->delete();
+        $this->bookingRepository->getById((int)$id)->delete();
 		return response()->json('Booking successfully deleted');
 	}
 
@@ -85,9 +96,7 @@ class BookingController extends Controller
 
 	protected function _isOccupied(Request $request)
 	{
-		return count(Booking::whereBetween('from', [$request->from, $request->to])
-			->orWhereBetween('to', [$request->from, $request->to])
-			->get());
+		return count($this->bookingRepository->getByDateRange($request->from, $request->to));
 	}
 
 	protected function _isValid(Request $request)
