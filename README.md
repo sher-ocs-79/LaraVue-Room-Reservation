@@ -9,7 +9,7 @@
 ## How to setup and run?
 
 - Clone this repository (git clone https://github.com/sher-ocs-79/LaraVue-Room-Reservation.git)
-- Edit ".env" file and change the DB configuration accordingly.
+- Edit `.env` file and change the DB configuration accordingly.
 - Edit `config/sanctum.php` add your localhost and port.
 - Migrate database (`php artisan migrate`)
 - Execute seeder (`php artisan db:seed --class=Rooms`)
