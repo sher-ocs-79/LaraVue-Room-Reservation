@@ -28,6 +28,12 @@ class UserController extends Controller
 	public function register(Request $request)
 	{
 		try {
+            $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|alpha_num',
+            ]);
+
             $this->userRepository->create([
                 'name' => $request->name,
                 'email' => $request->email,
